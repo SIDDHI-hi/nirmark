@@ -11,6 +11,7 @@ import CommandPalette from '@/components/CommandPalette';
 import StandardModal, { StandardDetail } from '@/components/StandardModal';
 import InfoModal from '@/components/InfoModal';
 import ComparePanel from '@/components/ComparePanel';
+import CompareModal from '@/components/CompareModal';
 import { useToast } from '@/components/ToastProvider';
 import { generateComplianceReport } from '@/utils/pdfGenerator';
 
@@ -96,6 +97,7 @@ export default function Home() {
   const [isOptimizing, setIsOptimizing] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
   const [isStandardFound, setIsStandardFound] = useState(true);
+  const [compareModalOpen, setCompareModalOpen] = useState(false);
   
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { toast } = useToast();
@@ -206,7 +208,7 @@ export default function Home() {
     <div className="min-h-screen bg-[#0A0E17]">
       <Navbar onCmdK={() => setCmdKOpen(true)} onInfoClick={() => setInfoOpen(true)} />
       
-      <main className="max-w-6xl mx-auto px-6 py-12">
+      <main className="w-full max-w-7xl mx-auto px-6 py-12">
         <AnimatePresence mode="wait">
           
           {/* ── HERO / INPUT ─────────────────────────────────────── */}
@@ -302,7 +304,7 @@ export default function Home() {
               key="results"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="space-y-6"
+              className="w-full max-w-7xl mx-auto flex flex-col gap-6"
             >
               <div className="flex items-center justify-between">
                 <button 
@@ -358,10 +360,10 @@ export default function Home() {
                 </div>
               )}
 
-              <div className="grid grid-cols-1 gap-8">
+              <div className="lg:col-span-2 grid grid-cols-1 gap-8">
                 {isStandardFound && results.map((res, i) => (
                   <StandardCard 
-                      key={res.code} 
+                      key={`${res.code}-${i}`} 
                       {...res} 
                       delay={i * 0.1}
                       onViewFull={setSelectedStandard}
@@ -395,9 +397,15 @@ export default function Home() {
       <CommandPalette open={cmdKOpen} onClose={() => setCmdKOpen(false)} onSearch={handleSearch} />
       <StandardModal standard={selectedStandard} onClose={() => setSelectedStandard(null)} onRelatedClick={handleSearch} />
       <InfoModal open={infoOpen} onClose={() => setInfoOpen(false)} />
-      <ComparePanel items={compareItems} onRemove={(code) => setCompareItems(prev => prev.filter(i => i.code !== code))} onClear={() => setCompareItems([])} />
+      <ComparePanel 
+        items={compareItems} 
+        onRemove={(code) => setCompareItems(prev => prev.filter(i => i.code !== code))} 
+        onClear={() => setCompareItems([])} 
+        onCompare={() => setCompareModalOpen(true)}
+      />
+      <CompareModal items={compareItems} open={compareModalOpen} onClose={() => setCompareModalOpen(false)} />
       
-      <footer className="max-w-6xl mx-auto px-6 py-8 border-t border-slate-900 text-center text-slate-700 text-[10px] font-bold uppercase tracking-widest">
+      <footer className="max-w-7xl mx-auto px-6 py-8 border-t border-slate-900 text-center text-slate-700 text-[10px] font-bold uppercase tracking-widest">
         Nirmark BIS Compliance Intelligence &nbsp;•&nbsp; Built for MSE Performance &nbsp;•&nbsp; v3.0.0
       </footer>
     </div>

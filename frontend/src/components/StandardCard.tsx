@@ -178,14 +178,10 @@ export default function StandardCard({
         </button>
 
         <button
-          onClick={() => onAddToProject(code)}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold border border-slate-800 bg-slate-900 text-slate-400 hover:bg-slate-800 transition-all"
-        >
-          <Plus size={14} /> Project
-        </button>
-
-        <button
-          onClick={() => onCompare({ code, title, matchScore, rank })}
+          onClick={() => onCompare({ 
+            rank, code, title, rationale, keywords, matchScore, relatedStandards, specs, 
+            clauses, edition, scope, critical_clauses, compliance_action, confidence_score, risk_level 
+          })}
           className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold border border-slate-800 bg-slate-900 text-slate-400 hover:bg-slate-800 transition-all"
           style={inCompare ? { borderColor: '#3B82F6', color: '#3B82F6', background: '#3B82F610' } : {}}
         >

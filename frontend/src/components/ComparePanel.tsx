@@ -2,18 +2,18 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Scale, Trash2 } from 'lucide-react';
-
-interface CompareItem { code: string; title: string; matchScore: number; rank: number }
+import type { StandardDetail } from '@/components/StandardModal';
 
 const RANK_COLORS: Record<number, string> = { 1: '#10B981', 2: '#6366F1', 3: '#F59E0B' };
 
 interface ComparePanelProps {
-  items: CompareItem[];
+  items: StandardDetail[];
   onRemove: (code: string) => void;
   onClear: () => void;
+  onCompare: () => void;
 }
 
-export default function ComparePanel({ items, onRemove, onClear }: ComparePanelProps) {
+export default function ComparePanel({ items, onRemove, onClear, onCompare }: ComparePanelProps) {
   if (items.length === 0) return null;
 
   return (
@@ -86,7 +86,7 @@ export default function ComparePanel({ items, onRemove, onClear }: ComparePanelP
             whileTap={{ scale: 0.98 }}
             className="w-full py-2.5 rounded-xl text-xs font-bold text-white"
             style={{ background: 'linear-gradient(135deg,#6366F1,#EC4899)' }}
-            onClick={() => alert('Side-by-side comparison view — coming in v1.1!')}
+            onClick={onCompare}
           >
             View Side-by-Side Comparison →
           </motion.button>

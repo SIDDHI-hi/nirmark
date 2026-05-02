@@ -15,7 +15,7 @@ export default function ResultsPanel({ results, latency }: ResultsPanelProps) {
   if (results.length === 0) return null;
 
   return (
-    <div className="w-full mt-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="w-full max-w-7xl mx-auto mt-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex items-center justify-between border-b border-black pb-2 mb-6">
         <h2 className="text-sm font-bold uppercase tracking-widest">Audit Results</h2>
         {latency && (
