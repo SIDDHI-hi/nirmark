@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+instructor
+groq
+lancedb
+sentence-transformers
+rank_bm25
+pyarrow
+python-dotenv
+pydantic
