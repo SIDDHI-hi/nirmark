@@ -9,8 +9,6 @@
 | **MRR @5** | **0.87** | > 0.7 |
 | **Avg Latency** | **1.24s** | < 5s |
 
-![NIRmark Dashboard](https://github.com/SIDDHI-hi/nirmark/raw/main/public/dashboard_preview.png) *(Note: Add your own screenshot path here)*
-
 ## 🚀 Key Features
 
 - **RAG-Powered Technical Audit**: Uses a high-performance FastAPI backend with Hybrid Search (Dense + Sparse) to find exact IS code clauses.
