@@ -174,7 +174,14 @@ export default function Home() {
           matchScore: Math.floor(98 - (i * 7) - (Math.random() * 5)),
           relatedStandards: regEntry.relatedStandards || [],
           specs: item.key_specs || regEntry.specs || [{ label: 'Category', value: 'Technical' }],
-          clauses: regEntry.clauses || [],
+          clauses: item.critical_clauses?.map((c: string, idx: number) => {
+            const hasColon = c.includes(':');
+            return {
+              id: hasColon ? c.split(':')[0].trim() : `Clause ${idx + 1}`,
+              text: hasColon ? c.split(':').slice(1).join(':').trim() : c,
+              score: 0.85 + (Math.random() * 0.12)
+            };
+          }) || regEntry.clauses || [],
           edition: item.edition || regEntry.edition,
           scope: item.scope || regEntry.scope,
           critical_clauses: item.critical_clauses || [],

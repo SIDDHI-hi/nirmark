@@ -67,7 +67,7 @@ SYSTEM_PROMPT = (
     "2. If no relevant BIS standards are found in the provided context for the user's specific query, set is_standard_found to False. "
     "3. If the user mentions international standards (BS EN, ASTM, ISO, etc.), map them to the nearest IS equivalent found in the context. "
     "4. For each standard, provide a 'compliance_action'—a direct instruction on what the user must do. "
-    "5. Extract 'critical_clauses' that the user must verify immediately. "
+    "5. Extract 'critical_clauses' that the user must verify immediately. Format each as 'Clause [Number]: [Actionable Instruction]'. "
     "6. Use an authoritative, professional tone. Never mention fallbacks or missing data."
 )
 
@@ -91,7 +91,7 @@ async def audit_query(request: AuditRequest):
         for i, chunk in enumerate(chunks, 1):
             meta = chunk.get("metadata", {})
             header = " > ".join(meta.values()) if meta else "Chunk"
-            content = chunk.get("content", "").strip()[:1000]
+            content = chunk.get("content", "").strip()[:600]
             context_blocks.append(f"[{i}] {header}\n{content}")
         
         context_str = "\n\n".join(context_blocks) if context_blocks else "No context found."

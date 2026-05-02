@@ -3,150 +3,212 @@ import { StandardDetail } from '@/components/StandardModal';
 
 export const generateComplianceReport = (query: string, results: StandardDetail[], latency: string) => {
   const doc = new jsPDF();
-  const timestamp = new Date().toLocaleString();
-  const reportId = `NMK-${Math.floor(Math.random() * 90000) + 10000}-${new Date().getFullYear()}`;
+  const timestamp = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+  const reportId = `NMK-BIS-${Math.floor(Math.random() * 900000) + 100000}-${new Date().getFullYear()}`;
 
-  // 1. Formal BIS-Style Header
-  doc.setDrawColor(0);
-  doc.setLineWidth(0.5);
-  doc.rect(10, 10, 190, 277); // Outer border for the whole page
+  // Helper: Draw a professional header on each page
+  const drawPageBorder = () => {
+    doc.setDrawColor(30, 41, 59);
+    doc.setLineWidth(0.5);
+    doc.rect(5, 5, 200, 287); // Outer border
+    doc.setLineWidth(0.1);
+    doc.rect(7, 7, 196, 283); // Inner decorative border
+  };
 
-  doc.setFont('times', 'bold');
-  doc.setFontSize(18);
-  doc.text('NIRMARK TECHNICAL AUDIT REPORT', 105, 25, { align: 'center' });
-  
+  const drawHeader = (pageNum: number) => {
+    drawPageBorder();
+    
+    // Logo / Branding Text
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(24);
+    doc.setTextColor(30, 41, 59);
+    doc.text('NIRMARK', 15, 20);
+    
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(100);
+    doc.text('BIS STANDARDS INTELLIGENCE PLATFORM', 15, 25);
+
+    // Official Report Tag
+    doc.setFillColor(30, 41, 59);
+    doc.rect(140, 12, 55, 15, 'F');
+    doc.setTextColor(255);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.text('TECHNICAL AUDIT', 167.5, 19, { align: 'center' });
+    doc.setFontSize(7);
+    doc.text(`ID: ${reportId}`, 167.5, 24, { align: 'center' });
+    
+    doc.setTextColor(0);
+    doc.setDrawColor(200);
+    doc.line(10, 35, 200, 35);
+  };
+
+  drawHeader(1);
+
+  // 1. Meta Information Block
+  doc.setFont('helvetica', 'bold');
   doc.setFontSize(10);
-  doc.setFont('times', 'normal');
-  doc.text('PREPARED PURSUANT TO BUREAU OF INDIAN STANDARDS (BIS) REGULATORY FRAMEWORK', 105, 32, { align: 'center' });
-
-  doc.line(15, 38, 195, 38);
-
-  // 2. Report Meta Information Table
-  doc.setFillColor(245, 245, 245);
-  doc.rect(15, 42, 180, 20, 'F');
-  doc.rect(15, 42, 180, 20, 'S');
-  doc.line(105, 42, 105, 62);
-
-  doc.setFont('times', 'bold');
-  doc.text('REPORT IDENTIFIER:', 18, 50);
-  doc.text('AUDIT TIMESTAMP:', 108, 50);
+  doc.text('AUDIT LOG INFORMATION', 15, 45);
   
-  doc.setFont('times', 'normal');
-  doc.text(reportId, 60, 50);
-  doc.text(timestamp, 145, 50);
+  doc.setFillColor(248, 250, 252);
+  doc.rect(15, 48, 180, 24, 'F');
+  doc.setDrawColor(226, 232, 240);
+  doc.rect(15, 48, 180, 24, 'S');
 
-  doc.setFont('times', 'bold');
-  doc.text('SOURCE SYSTEM:', 18, 57);
-  doc.text('AUDIT LATENCY:', 108, 57);
+  doc.setFontSize(8);
+  doc.setTextColor(100);
+  doc.text('GENERATED ON:', 20, 55);
+  doc.text('SYSTEM LATENCY:', 20, 61);
+  doc.text('REGULATORY DATASET:', 20, 67);
   
-  doc.setFont('times', 'normal');
-  doc.text('NIRMARK RAG ENGINE v2.0', 60, 57);
-  doc.text(latency, 145, 57);
+  doc.setTextColor(30, 41, 59);
+  doc.setFont('helvetica', 'bold');
+  doc.text(timestamp, 60, 55);
+  doc.text(latency, 60, 61);
+  doc.text('SP21/BIS COMPLIANCE CORPUS v3.0 (PRO)', 60, 67);
 
-  // 3. Project Scope (Formal)
-  doc.setFont('times', 'bold');
+  // 2. Project Scope Section
   doc.setFontSize(12);
-  doc.text('1.0 PROJECT SCOPE AND COMPLIANCE QUERY', 15, 75);
-  doc.line(15, 77, 100, 77);
+  doc.text('1.0 PROJECT SCOPE & COMPLIANCE QUERY', 15, 85);
+  doc.setDrawColor(59, 130, 246);
+  doc.setLineWidth(1);
+  doc.line(15, 87, 30, 87);
 
-  doc.setFont('times', 'italic');
+  doc.setFont('helvetica', 'normal');
   doc.setFontSize(10);
-  const splitQuery = doc.splitTextToSize(`"${query}"`, 170);
-  doc.text(splitQuery, 20, 85);
+  doc.setTextColor(71, 85, 105);
+  const splitQuery = doc.splitTextToSize(`Target Query: "${query}"`, 170);
+  doc.text(splitQuery, 15, 95);
 
-  let yPos = 85 + (splitQuery.length * 5) + 15;
+  let yPos = 95 + (splitQuery.length * 5) + 15;
 
-  // 4. Compliance Summary Table
-  doc.setFont('times', 'bold');
+  // 3. Executive Summary Table
+  doc.setFont('helvetica', 'bold');
   doc.setFontSize(12);
-  doc.text('2.0 COMPLIANCE SUMMARY TABLE', 15, yPos);
-  doc.line(15, yPos + 2, 100, yPos + 2);
+  doc.setTextColor(30, 41, 59);
+  doc.text('2.0 COMPLIANCE SUMMARY', 15, yPos);
+  doc.line(15, yPos + 2, 30, yPos + 2);
   yPos += 10;
 
-  // Table Header
-  doc.setFillColor(60, 60, 60);
-  doc.rect(15, yPos, 180, 8, 'F');
+  doc.setFillColor(30, 41, 59);
+  doc.rect(15, yPos, 180, 10, 'F');
   doc.setTextColor(255);
   doc.setFontSize(9);
-  doc.text('SN', 18, yPos + 5.5);
-  doc.text('STANDARD IDENTIFIER', 30, yPos + 5.5);
-  doc.text('CONFIDENCE', 90, yPos + 5.5);
-  doc.text('STATUS', 130, yPos + 5.5);
-  doc.text('RISK LEVEL', 165, yPos + 5.5);
+  doc.text('SN', 20, yPos + 6.5);
+  doc.text('IS CODE', 35, yPos + 6.5);
+  doc.text('MATCH %', 85, yPos + 6.5);
+  doc.text('AUDIT STATUS', 120, yPos + 6.5);
+  doc.text('REGULATORY RISK', 160, yPos + 6.5);
 
-  doc.setTextColor(0);
-  yPos += 8;
+  doc.setTextColor(30, 41, 59);
+  yPos += 10;
   results.forEach((res, i) => {
-    doc.rect(15, yPos, 180, 8, 'S');
-    doc.text(`${i + 1}`, 18, yPos + 5.5);
-    doc.text(res.code, 30, yPos + 5.5);
-    doc.text(`${Math.round((res.confidence_score || 0.94) * 100)}%`, 90, yPos + 5.5);
-    doc.text('VERIFIED', 130, yPos + 5.5);
-    doc.text(res.confidence_score && res.confidence_score > 0.9 ? 'LOW' : 'MEDIUM', 165, yPos + 5.5);
-    yPos += 8;
+    doc.setDrawColor(241, 245, 249);
+    doc.line(15, yPos + 8, 195, yPos + 8);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`${i + 1}`, 20, yPos + 5.5);
+    doc.setFont('helvetica', 'bold');
+    doc.text(res.code, 35, yPos + 5.5);
+    doc.text(`${res.matchScore}%`, 85, yPos + 5.5);
+    
+    doc.setTextColor(16, 185, 129);
+    doc.text('VERIFIED', 120, yPos + 5.5);
+    
+    const risk = res.risk_level || 'Medium';
+    doc.setTextColor(risk === 'High' ? 239 : 245, risk === 'High' ? 68 : 158, risk === 'High' ? 68 : 11);
+    doc.text(risk.toUpperCase(), 160, yPos + 5.5);
+    
+    doc.setTextColor(30, 41, 59);
+    yPos += 10;
   });
 
-  yPos += 15;
+  yPos += 10;
 
-  // 5. Detailed Technical Annex
-  doc.setFont('times', 'bold');
+  // 4. Detailed Technical Annex
   doc.setFontSize(12);
-  doc.text('3.0 TECHNICAL ANNEX: DETAILED SPECIFICATIONS', 15, yPos);
-  doc.line(15, yPos + 2, 120, yPos + 2);
+  doc.text('3.0 TECHNICAL ANNEX: DETAILED AUDIT', 15, yPos);
+  doc.setDrawColor(59, 130, 246);
+  doc.line(15, yPos + 2, 30, yPos + 2);
   yPos += 12;
 
   results.forEach((res, index) => {
+    // Dynamic Height Calculation
+    const splitTitle = doc.splitTextToSize(`${res.code}: ${res.title}`, 160);
     const splitRationale = doc.splitTextToSize(res.rationale, 170);
     const splitAction = doc.splitTextToSize(res.compliance_action || 'N/A', 170);
-    const blockHeight = 45 + (splitRationale.length * 5) + (splitAction.length * 5);
+    
+    const headerHeight = 10 + (splitTitle.length * 5);
+    const bodyHeight = 45 + (splitRationale.length * 5) + (splitAction.length * 5);
+    const totalHeight = headerHeight + bodyHeight;
 
-    if (yPos + blockHeight > 270) {
+    if (yPos + totalHeight > 270) {
       doc.addPage();
-      doc.setDrawColor(0);
-      doc.rect(10, 10, 190, 277); // Outer border for new page
-      yPos = 25;
+      drawHeader(2);
+      yPos = 45;
     }
 
-    // Standard Header Block
-    doc.setFillColor(245, 245, 245);
-    doc.rect(15, yPos, 180, 10, 'F');
-    doc.rect(15, yPos, 180, 10, 'S');
-    doc.setFont('times', 'bold');
-    doc.setFontSize(11);
-    doc.text(`${res.code} : ${res.title}`, 20, yPos + 7);
+    // Box Header
+    doc.setFillColor(241, 245, 249);
+    doc.setDrawColor(203, 213, 225);
+    doc.rect(15, yPos, 180, headerHeight, 'F');
+    doc.rect(15, yPos, 180, headerHeight, 'S');
     
-    yPos += 10;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(30, 41, 59);
+    doc.text(splitTitle, 20, yPos + 8);
+    
+    yPos += headerHeight;
 
-    // Content Block
-    doc.rect(15, yPos, 180, blockHeight - 10, 'S');
+    // Box Body
+    doc.setDrawColor(226, 232, 240);
+    doc.rect(15, yPos, 180, bodyHeight, 'S');
+    
+    doc.setFontSize(8);
+    doc.setTextColor(59, 130, 246);
+    doc.text('TECHNICAL RATIONALE', 20, yPos + 8);
+    
+    doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
-    doc.text('TECHNICAL RATIONALE:', 18, yPos + 7);
-    doc.setFont('times', 'normal');
-    doc.text(splitRationale, 18, yPos + 12);
+    doc.setTextColor(71, 85, 105);
+    doc.text(splitRationale, 20, yPos + 14);
 
-    const actionY = yPos + 15 + (splitRationale.length * 5);
-    doc.setFont('times', 'bold');
-    doc.text('MANDATORY COMPLIANCE ACTION:', 18, actionY);
-    doc.setFont('times', 'normal');
-    doc.text(splitAction, 18, actionY + 5);
+    const actionY = yPos + 18 + (splitRationale.length * 5);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(245, 158, 11);
+    doc.text('MANDATORY COMPLIANCE ACTION', 20, actionY);
+    
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(30, 41, 59);
+    doc.text(splitAction, 20, actionY + 6);
 
-    const clausesY = actionY + 10 + (splitAction.length * 5);
-    doc.setFont('times', 'bold');
-    doc.text('CRITICAL CLAUSES FOR VERIFICATION:', 18, clausesY);
-    doc.setFont('times', 'normal');
-    const clausesStr = (res.critical_clauses || ['Clause 6', 'Table 5']).join(' | ');
-    const splitClauses = doc.splitTextToSize(clausesStr, 170);
-    doc.text(splitClauses, 18, clausesY + 5);
+    const clausesY = actionY + 12 + (splitAction.length * 5);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(100);
+    doc.text('CRITICAL CLAUSES FOR VERIFICATION', 20, clausesY);
+    
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    const clauses = (res.critical_clauses || ['Clause 6', 'Table 5']);
+    
+    clauses.forEach((clause, ci) => {
+        doc.setFillColor(248, 250, 252);
+        doc.rect(20, clausesY + 3 + (ci * 6), 170, 5, 'F');
+        doc.text(`• ${clause}`, 23, clausesY + 6.5 + (ci * 6));
+    });
 
-    yPos += blockHeight + 15;
+    yPos += bodyHeight + 15;
   });
 
-  // Footer
-  doc.setFont('times', 'italic');
-  doc.setFontSize(8);
-  doc.text('This document is an AI-generated technical advisory based on the NIRMARK SP21/BIS Corpus.', 105, 280, { align: 'center' });
-  doc.text('NirMark utilizes AI for standard discovery. Always cross-reference with official BIS gazettes.', 105, 284, { align: 'center' });
-  doc.text('For legal purposes, please cross-reference with official Bureau of Indian Standards notifications.', 105, 288, { align: 'center' });
+  // Footer on final page
+  doc.setFont('helvetica', 'italic');
+  doc.setFontSize(7);
+  doc.setTextColor(148, 163, 184);
+  doc.text('NIRMARK REGULATORY ADVISORY • STRICTLY FOR TECHNICAL AUDIT PURPOSES • NOT A SUBSTITUTE FOR OFFICIAL GAZETTE VERIFICATION', 105, 285, { align: 'center' });
 
   doc.save(`NIRMARK_BIS_Audit_${reportId}.pdf`);
 };
