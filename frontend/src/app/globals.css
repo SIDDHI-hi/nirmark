@@ -1,0 +1,152 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* ─── NIRMARK v3.0 DESIGN TOKENS ────────────────────────────── */
+:root {
+  --bg-primary: #0A0E17;        /* Deeper than slate-900 */
+  --bg-secondary: #151923;      /* Card backgrounds */
+  --bg-tertiary: #1E2330;       /* Elevated surfaces */
+
+  --primary: #3B82F6;           /* Standard blue (BIS Authority) */
+  --primary-hover: #2563EB;     /* Hover states */
+  --accent: #F59E0B;            /* Saffron (Strategic use) */
+
+  --text-primary: #F8FAFC;      /* Almost white */
+  --text-secondary: #94A3B8;    /* Muted */
+  --text-accent: #3B82F6;       
+
+  /* Semantic Colors */
+  --success: #10B981;           /* Green for relevance */
+  --warning: #F59E0B;           /* Amber for medium */
+  --error: #EF4444;             /* Red for low relevance */
+
+  /* Borders */
+  --border-subtle: #1E293B;     /* Card borders */
+  --border-default: #334155;    /* Input borders */
+  --border-active: #3B82F6;     /* Focus states */
+}
+
+/* ─── BASE ──────────────────────────────────────────────────── */
+@layer base {
+  html, body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+  }
+
+  * {
+    box-sizing: border-box;
+    border-color: var(--border-subtle);
+  }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg-primary); }
+  ::-webkit-scrollbar-thumb { background: #334155; border-radius: 99px; }
+  ::-webkit-scrollbar-thumb:hover { background: #475569; }
+}
+
+/* ─── COMPONENTS ────────────────────────────────────────────── */
+@layer components {
+  /* Simple Card - NO GLASS */
+  .nirmark-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Input Field */
+  .nirmark-input {
+    background: var(--bg-primary);
+    border: 2px solid var(--border-default);
+    border-radius: 8px;
+    padding: 16px;
+    color: var(--text-primary);
+    font-size: 16px;
+    transition: border-color 0.2s;
+    width: 100%;
+    outline: none;
+  }
+  .nirmark-input:focus {
+    border-color: var(--primary);
+  }
+
+  /* Primary Button */
+  .nirmark-btn {
+    background: var(--primary);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .nirmark-btn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+  }
+  .nirmark-btn:active {
+    transform: translateY(0);
+  }
+  .nirmark-btn:disabled {
+    background: #1E293B;
+    color: #64748B;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Badge */
+  .nirmark-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  /* Skeleton Shimmer */
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      #1E293B 0%,
+      #334155 50%,
+      #1E293B 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loader-spin {
+  width: 18px;
+  height: 18px;
+  border: 2px solid white;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
